@@ -40,7 +40,6 @@ app.use(merhodOverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
-
 const store = MongoStore.create({
   mongoUrl: dbUrl,
   crypto: {
@@ -49,9 +48,10 @@ const store = MongoStore.create({
   touchAfter: 24 * 3600,
 });
 
-store.on("error",()=>{
-  console.log("ERROR in MONGO SESSION STORE",err);
-})
+store.on("error", () => {
+  console.log("ERROR in MONGO SESSION STORE", err);
+});
+
 const sessionOptions = {
   store,
   secret: process.env.SECRET,
@@ -63,9 +63,6 @@ const sessionOptions = {
     httpOnly: true,
   },
 };
-
-
-
 
 app.use(session(sessionOptions));
 app.use(flash());
@@ -84,13 +81,9 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
-
-
 
 app.all("*", (req, res, next) => {
   next(new ExpressError(404, "Page not found"));
